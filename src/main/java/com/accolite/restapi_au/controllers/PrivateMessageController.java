@@ -8,6 +8,7 @@ import com.accolite.restapi_au.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +21,9 @@ public class PrivateMessageController {
     //Create service
     @Autowired
     PrivateMessageService privateMessageService;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @PostMapping("/add/{userId}")
   public ResponseEntity<Object> postMessage(
@@ -41,7 +45,7 @@ public class PrivateMessageController {
     if (user == null) {
       return ResponseEntity.notFound().build();
     }
-    if(user.getPassword().equals(password)) {
+    if(bCryptPasswordEncoder.matches(password, user.getPassword())) {
         return ResponseEntity.ok(privateMessageService.getMessages(userId));
     }
       return ResponseEntity.ok("Invalid login");

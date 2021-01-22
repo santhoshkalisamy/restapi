@@ -5,6 +5,7 @@ import com.accolite.restapi_au.repository.UserRepository;
 import com.accolite.restapi_au.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,6 +17,8 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
 
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public User addUser(User user) {
@@ -39,6 +42,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private String getEncryptedPassword(String plainPassword) {
-        return plainPassword;
+        return bCryptPasswordEncoder.encode(plainPassword);
     }
 }
